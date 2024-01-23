@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+   <meta charset="UTF-8">
+   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+   <title>Consulta de CEP</title>
+   <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+</head>
+<body>
+   <h1>Consulta de CEP</h1>
+   <form id="cepForm" onsubmit="return consultarCep()">
+       <label for="cep">CEP:</label>
+       <input type="text" id="cep" name="cep" required>
+       <button type="submit">Consultar</button>
+
+       <label for="logradouro">Logradouro:</label>
+       <input type="text" id="logradouro" name="logradouro" readonly>
+
+       <label for="bairro">Bairro:</label>
+       <input type="text" id="bairro" name="bairro" readonly>
+
+       <label for="localidade">Localidade:</label>
+       <input type="text" id="localidade" name="localidade" readonly>
+
+       <label for="uf">UF:</label>
+       <input type="text" id="uf" name="uf" readonly>
+   </form>
+
+   <script>
+       async function consultarCep() {
+           event.preventDefault();
+
+           const cep = document.getElementById('cep').value;
+
+           try {
+               const response = await axios.get(`http://localhost:3000/consultarCep?cep=${cep}`);
+               const data = response.data;
+               console.log(data)
+
+               // Preencher automaticamente os campos do formulário
+               document.getElementById('logradouro').value = data.logradouro || '';
+               document.getElementById('bairro').value = data.bairro || '';
+               document.getElementById('localidade').value = data.localidade || '';
+               document.getElementById('uf').value = data.uf || '';
+           } catch (error) {
+               console.error('Erro ao consultar o CEP:', error);
+               alert('Erro ao consultar o CEP. Verifique se o CEP é válido.');
+           }
+       }
+   </script>
+</body>
+</html>
